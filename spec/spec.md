@@ -4,8 +4,7 @@
 
 Specification Status: Editor's Draft
 
-Latest Draft:
-[identity.foundation/delegated-authority-report](https://identity.foundation/delegated-authority-report)
+Latest Draft: [identity.foundation/delegated-authority-report](https://identity.foundation/delegated-authority-report)
 
 Ratified Versions:
 
@@ -13,17 +12,22 @@ Editors:
 
 - Debbi Bucci (@debbucci)
 
+
 Contributors:
 
 - Debbie Bucci (@debbucci)
 - Juan Caballero (@bumblefudge)
 - Alan Karp (@alanhkarp)
 
+
 Participate:
-~ [GitHub repo](https://github.com/decentralized-identity/governance-of-delegated-authority-report)
-~ [File a bug](https://github.com/decentralized-identity/governance-of-delegated-authority-report/issues)
-~ [Commit history](https://github.com/decentralized-identity/governance-of-delegated-authority-report/commits/main)
-~ [Working Group](https://identity.foundation/working-groups/trusted-agents.html)
+[GitHub repo](https://github.com/decentralized-identity/delegated-authority-threat-model)
+
+[File a bug](https://github.com/decentralized-identity/delegated-authority-threat-model/issues)
+
+[Commit history](https://github.com/decentralized-identity/delegated-authority-threat-model/commits/main)
+
+[Working Group](https://identity.foundation/working-groups/trusted-agents.html)
 
 Except where otherwise noted, this work by the [Decentralized Identity Foundation](https://identity.foundation/) is licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0).
 
@@ -34,11 +38,12 @@ Except where otherwise noted, this work by the [Decentralized Identity Foundatio
 - [Governance Considerations](https://identity.foundation/governance-of-delegated-authority-report/)
 - [Agentic-Delegation User-Story Walk-through](https://www.youtube.com/watch?v=u-uWl_s0PPM%20)
 
+
 ## Abstract
 
 Delegated authority in AI-mediated systems fails not at the moment of issuance but at the moment of action. This paper catalogs five structural failure modes — authority not properly *bounded, attested, enforced, authenticated,* or *interpreted* — that emerge when governance frameworks designed for human-paced execution are applied to autonomous agents operating across organizational and technical boundaries. All five are amplified by time: authority valid at issuance may not remain valid, traceable, enforceable, secure, or semantically aligned at execution. These failures represent a class of Governance TOCTOU vulnerability — the authority checked at issuance is not the authority present at execution.
 
-This paper introduces “subject agency state” as a first-class governance variable: whether the person behind a delegation can still authorize, redirect, revoke, or validate the action at the moment of execution. This signal is absent from current authorization frameworks and unspecified by current standards. This absence is not an oversight. It is a structural consequence of frameworks that assume subject availability without modeling it.
+This paper introduces "subject agency state" as a first-class governance variable: whether the person behind a delegation can still authorize, redirect, revoke, or validate the action at the moment of execution. This signal is absent from current authorization frameworks and unspecified by current standards. This absence is not an oversight. It is a structural consequence of frameworks that assume subject availability without modeling it.
 
 The paper concludes with a requirements statement for standards communities: specify execution-time evaluation of delegated authority, decouple credential lifecycle from mission lifecycle, define subject agency state as a runtime signal, and establish proof of continuity as a verifiable property of delegation chains. Existing frameworks — OAuth, GNAP, KERI, ACDC, and related work — provide the substrate. The governance semantics required above that substrate remain unspecified. That specification is the work this paper asks for — a single interoperable governance layer that composes with each protocol rather than extending any one of them separately.
 
@@ -94,11 +99,11 @@ Over-permissioning at issuance is the most common bounding failure. In human-ope
 
 ### Attenuation not enforced across delegation chains
 
-Each hop in a delegation chain must not exceed the scope of the granting authority. Without enforced attenuation every hop is a potential amplification point. Bounds defined at the origin do not automatically propagate — they must be enforced at each link. A delegate may pass all authority they hold, but they cannot pass more than they hold. A delegate may combine what was passed to them with permissions they independently hold — but cannot pass authority they do not hold.
+Each hop in a delegation chain must not exceed the scope of the granting authority. Without enforced attenuation every hop is a potential amplification point. Bounds defined at the origin do not automatically propagate — they must be enforced at each link. A delegate may pass all permission they hold, but they cannot pass more than they hold. Authority — the effects that result — depends on what is invoked and cannot be directly bounded, only constrained through the permissions that enable it. A delegate may combine what was passed to them with permissions they independently hold — but cannot pass permission they do not hold.
 
 ### Redelegation without constraint — authority creep
 
-Without explicit constraints on redelegation — who may receive it, under what scope, for how long — systems that lack enforcement become vulnerable to authority creep. Authority creep is not an inherent property of delegation. It is a failure mode of systems that do not enforce attenuation at each link. Any system that permits authority expansion on delegation is broken by design or by omission. The threat is not that delegation chains expand authority — it is that systems deployed at scale today lack the enforcement mechanisms to prevent it. Blocking redelegation entirely is also a failure mode — it leads to credential sharing and excess privilege because delegates cannot attenuate authority for sub-tasks. The governance requirement is enforced attenuation at each link, not prevention of redelegation itself.
+Without explicit constraints on redelegation — who may receive it, under what scope, for how long — systems that lack enforcement become vulnerable to authority creep. Authority creep is not an inherent property of delegation. It is a failure mode of systems that do not enforce attenuation at each link. Any system that permits permission expansion on delegation is broken by design or by omission. Authority — the effects that result — cannot be directly governed at the delegation layer; it is constrained only through the permissions that enable it. The threat is not that delegation chains expand authority — it is that systems deployed at scale today lack the enforcement mechanisms to prevent it. Blocking redelegation entirely is also a failure mode — it leads to credential sharing and excess privilege because delegates cannot attenuate authority for sub-tasks. The governance requirement is enforced attenuation at each link, not prevention of redelegation itself.
 
 ### Duration and revocation not defined or honored
 
@@ -118,17 +123,17 @@ Time amplifier: bounds defined at issuance may reflect the subject's intent even
 
 ## Failure Mode Category Two: Authority Not Properly Attested
 
-Attestation is the governance requirement that authorization and execution leave a verifiable record — one that can be reconstructed, audited, and traced back to the subject who authorized the action. Particularly in cross-organizational journeys, which are steadily increasing in the agentic space, this end-to-end verifiable record (a graph of variously-intelligible and \-replayable attestations, really) is becoming the only imaginable foundation for systems that are both scalable and auditable, to say nothing of insurable. Without attestation, authority cannot be held accountable. These are hazards the architecture must avoid — not indictments of existing implementations, which were built without these requirements in scope.
+Attestation is the governance requirement that authorization and execution leave a verifiable record — one that can be reconstructed, audited, and traced back to the subject who authorized the action. Particularly in cross-organizational journeys, which are steadily increasing in the agentic space, this end-to-end verifiable record (a graph of variously-intelligible and -replayable attestations, really) is becoming the only imaginable foundation for systems that are both scalable and auditable, to say nothing of insurable. Without attestation, authority cannot be held accountable. These are hazards the architecture must avoid — not indictments of existing implementations, which were built without these requirements in scope.
 
 ### There is no cryptographic or verifiable binding between authorization and execution
 
-Authorization and execution records tend to exist in separate namespaces with no cryptographic binding between them, merged only by a joint owner of the two namespaces and never presented to any external party as an intelligible recordset, much less a meaningful audit log. Post-incident review cannot establish that an action was taken under the authority of a specific grant, by the specific delegate it was issued to, at a moment when the grant was still valid. The absence of that binding is not a logging gap. It is a structural accountability failure. 
+Authorization and execution records tend to exist in separate namespaces with no cryptographic binding between them, merged only by a joint owner of the two namespaces and never presented to any external party as an intelligible recordset, much less a meaningful audit log. Post-incident review cannot establish that an action was taken under the authority of a specific grant, by the specific delegate it was issued to, at a moment when the grant was still valid. The absence of that binding is not a logging gap. It is a structural accountability failure.
 
 In one documented deployment, a certificate capability system signed the authorization and the execution request as separate artifacts. An adversary exploited the separation to attach a different request to a valid set of permissions. The fix in that case was a single signature covering both documents— binding what was authorized to what was executed, and ensuring anyone authorized to see or verify one document had the other on hand.
 
 ### Delegation chain cannot be reconstructed after the fact
 
-Sub-agents invoke tools, call APIs, and spawn further delegates without leaving a traceable record of the authority under which they acted, losing key links or receipts when those agents “spin down”. By the time execution occurs, the chain that authorized it has often dissolved. Accountability has no anchor, and no mechanism for collecting all relevant receipts from other actors (including ephemeral ones without any persistent storage of their own).
+Sub-agents invoke tools, call APIs, and spawn further delegates without leaving a traceable record of the authority under which they acted, losing key links or receipts when those agents "spin down". By the time execution occurs, the chain that authorized it has often dissolved. Accountability has no anchor, and no mechanism for collecting all relevant receipts from other actors (including ephemeral ones without any persistent storage of their own).
 
 ### Identity without provenance of authority is insufficient for accountability
 
@@ -150,12 +155,11 @@ Current frameworks attest that consent was given. They do not attest why. Intent
 
 Time amplifier: identity alone is insufficient for accountability when authority provenance and intent continuity cannot be bound to execution. Short-lived agents dissolve before accountability can be established. Long-lived agents accumulate accountability gaps across time, delegation chains, and execution contexts.
 
-
 ## Failure Mode Category Three: Authority Not Properly Enforced
 
 Enforcement is the function that makes governance real. A system that authorizes without enforcing is not a governed system. It is a documented one.
 
-## Policy defined but not operationalized
+### Policy defined but not operationalized
 
 A governance policy with no operational path to enforcement is an optimistic statement of intentions. Agents do not pause to consult documentation, much less contracts and charters. If operational boundaries do not reflect current policy, the policy does not in fact govern the action.
 
@@ -181,7 +185,7 @@ When conditions change in ways that require a governance transition, a governed 
 
 ### Shadow delegate
 
-An authorized agent may invoke tools, APIs, or sub-processes that act on behalf of the subject without the subject having authorized that extension. The shadow delegate cannot exceed the authority held by the delegating agent — it is technically bounded. The failure is not authority expansion. It is policy violation and accountability invisibility. The subject authorized the agent. The agent extended that authority without explicit permission to do so. This failure is structurally invisible in systems that do not track the full delegation chain. The audit log shows authorized agent activity. It does not show the agent sub-delegating to a tool, API, or subprocess in a way that extends or ignores the scope if its own authority (because this subdelegation is not a verbosely-logged event),  or whether that extension was permitted by governance policy.
+An authorized agent may invoke tools, APIs, or sub-processes that act on behalf of the subject without the subject having authorized that extension. The shadow delegate cannot exceed the authority held by the delegating agent — it is technically bounded. The failure is not authority expansion. It is policy violation and accountability invisibility. The subject authorized the agent. The agent extended that authority without explicit permission to do so. This failure is structurally invisible in systems that do not track the full delegation chain. The audit log shows authorized agent activity. It does not show the agent sub-delegating to a tool, API, or subprocess in a way that extends or ignores the scope if its own authority (because this subdelegation is not a verbosely-logged event), or whether that extension was permitted by governance policy.
 
 ### Confused deputy 2.0
 
@@ -191,13 +195,13 @@ LLM agents have also been documented exceeding their authorization through activ
 
 ### Ghost execution
 
-“Ghost execution” names the enforcement failure where valid credentials continue to authorize actions after the purpose that justified them has ended, i.e. after the initial intent has been fulfilled without propagating that state to all actors it authorized along the way. The token is still valid. The policy check passes. Yet the mission is over. No enforcement point knows the difference because no enforcement point holds mission state as a first-class input.
+"Ghost execution" names the enforcement failure where valid credentials continue to authorize actions after the purpose that justified them has ended, i.e. after the initial intent has been fulfilled without propagating that state to all actors it authorized along the way. The token is still valid. The policy check passes. Yet the mission is over. No enforcement point knows the difference because no enforcement point holds mission state as a first-class input.
 
 ### Fatigued humans in the loop — governance bypass via subject fatigue
 
 When verification is uniform across all actions regardless of consequence, subjects face a volume of requests that exceeds human tolerance. The rational response — granting broad authority to stop the interruptions — is itself the governance failure. Enforcement must be calibrated to action consequence, not applied uniformly.
 
-Time amplifier: enforcement checked at session establishment does not reflect current authority state. The longer an agent operates between enforcement checks, the greater the divergence between the authority the system believes is in effect and the authority that is actually valid, often underreported by a human that can’t be trusted to stay “in the loop”.
+Time amplifier: enforcement checked at session establishment does not reflect current authority state. The longer an agent operates between enforcement checks, the greater the divergence between the authority the system believes is in effect and the authority that is actually valid, often underreported by a human that can't be trusted to stay "in the loop".
 
 ## Failure Mode Category Four: Authority Not Properly Authenticated
 
@@ -247,7 +251,7 @@ As delegation passes through a chain, intent loses fidelity at each hop. Semanti
 
 ### Subject agency state and semantic failure
 
-When a subject is fully capable, semantic failures are correctable. When subject agency state is compromised, the semantic gap becomes unresolvable without execution-time evaluation. The agent cannot distinguish between an instruction the subject still stands behind and one that no longer reflects their current intent. This is the dimension the human condition layer addresses, developed fully in Section 9\.
+When a subject is fully capable, semantic failures are correctable. When subject agency state is compromised, the semantic gap becomes unresolvable without execution-time evaluation. The agent cannot distinguish between an instruction the subject still stands behind and one that no longer reflects their current intent. This is the dimension the human condition layer addresses, developed fully in Section 9.
 
 ### Context collapse
 
@@ -287,7 +291,7 @@ An autonomous agent and a human co-authored a formal IETF draft targeting the ga
 
 Note: Internal labels used during development of this paper — Ghost in the Machine, Zombies, Puppet Master — are retained in the glossary. Section headings use governance-neutral language.
 
-## The Human Condition Layer 
+## The Human Condition Layer
 
 The five failure categories share a common architectural assumption: the subject is available, capable, and able to authorize, redirect, revoke, and confirm. That assumption is embedded in current authorization frameworks. It has never needed to be stated because human-operated systems were governed by the presence of the human. Agents do not stop. They continue acting under the last valid grant until something tells them not to.
 
@@ -345,7 +349,7 @@ At Permanently incapacitated, attestation is the critical ongoing requirement. W
 
 ### This is not an edge case
 
-More than 55 million people in the United States are over 65\. Globally that number exceeds 700 million. Cognitive decline, medical events, and temporary incapacity affect people across every age group and every context in which agent systems are deployed. Any agent system deployed on behalf of human subjects will eventually encounter a subject whose agency state has changed.
+More than 55 million people in the United States are over 65. Globally that number exceeds 700 million. Cognitive decline, medical events, and temporary incapacity affect people across every age group and every context in which agent systems are deployed. Any agent system deployed on behalf of human subjects will eventually encounter a subject whose agency state has changed.
 
 The developmental direction matters equally. A parent who authorizes an agent to support a child's care will eventually reach a point where the child should hold that authority themselves. Subject agency state transitions occur in both directions. The governance architecture must address both.
 
@@ -387,13 +391,13 @@ None of the current standards defines what must be checked at the moment an acti
 
 ### Credential lifecycle and mission lifecycle must be decoupled and both specified
 
-Credential lifecycle is not mission lifecycle. A token refreshed at 3 AM does not re-authorize the mission provisioned at 9 AM. Dick Hardt’s [internet draft for the AAuth Protocol](https://datatracker.ietf.org/doc/draft-hardt-aauth-protocol/) introduces the **mission object** as a first-class protocol artifact — a significant step toward mission lifecycle specification. The gap this paper identifies is the additional layer that evaluates whether the mission remains consistent with subject agency state and intent continuity at execution time. AAuth does not currently support attenuated delegation — the property that each delegation hop can only narrow scope, never expand it. That limitation is a significant constraint for chained delegation governance. [GNAP](https://datatracker.ietf.org/group/gnap/documents/)'s ongoing access model is the closest existing protocol concept to execution-time evaluation but stops short of specifying what must be checked at the moment of action. OAuth's grant lifecycle provides foundational machinery. Neither specifies when a mission should end independent of credential validity.
+Credential lifecycle is not mission lifecycle. A token refreshed at 3 AM does not re-authorize the mission provisioned at 9 AM. Dick Hardt's [internet draft for the AAuth Protocol](https://datatracker.ietf.org/doc/draft-hardt-aauth-protocol/) introduces the **mission object** as a first-class protocol artifact — a significant step toward mission lifecycle specification. The gap this paper identifies is the additional layer that evaluates whether the mission remains consistent with subject agency state and intent continuity at execution time. AAuth does not currently support attenuated delegation — the property that each delegation hop can only narrow the permissions granted, never expand them. Authority — the effects that can be caused — narrows as a consequence. That limitation is a significant constraint for chained delegation governance. [GNAP](https://datatracker.ietf.org/group/gnap/documents/)'s ongoing access model is the closest existing protocol concept to execution-time evaluation but stops short of specifying what must be checked at the moment of action. OAuth's grant lifecycle provides foundational machinery. Neither specifies when a mission should end independent of credential validity.
 
 Transaction tokens provide an additional binding mechanism — linking authorization to a specific transaction at execution time rather than to a session or credential. Nicola Gallo's [PIC model](https://github.com/pic-protocol/pic-spec) — Provenance, Identity, Continuity — addresses the mission lifecycle problem at the architectural layer by treating continuity as a mathematically provable property of the execution chain rather than a simply-evaluated document an actor holds. Both are relevant substrates for the mission lifecycle specification this section calls for.
 
 ### Existing frameworks provide critical machinery but do not fully address execution-time authority
 
-OAuth 2.0 and its extensions — Rich Authorization Requests, Token Exchange, CAEP, and SSF — address the access layer with increasing precision. GNAP advances the delegation model. OpenID Connect and OpenID Federation address federated identity and are incrementally adding extensions for federation-based delegation and shared auditing. Authorization Capabilities — ZCAPs — are specifically designed for attenuated delegation. Each capability can only be narrowed when passed forward. A holder cannot delegate more than they hold. User Controlled Authorization Networks — UCAN — carry the same structural attenuation property. Both are leading candidates in active delegation governance work in our working group at DIF. Neither addresses mission lifecycle or subject agency state as runtime governance inputs. Macaroons and Biscuit provide structural attenuation — governing the logic of what a credential may do — but do not address intent continuity or semantic interpretation failures. Cedar, Open Policy Agent, and XACML provide policy evaluation infrastructure to mitigate the latter but no mechanism for making “missions” or intent more generally traceable or portable.
+OAuth 2.0 and its extensions — Rich Authorization Requests, Token Exchange, CAEP, and SSF — address the access layer with increasing precision. GNAP advances the delegation model. OpenID Connect and OpenID Federation address federated identity and are incrementally adding extensions for federation-based delegation and shared auditing. Authorization Capabilities — ZCAPs — are specifically designed for attenuated delegation. Each capability can only be narrowed when passed forward. A holder cannot delegate more than they hold. User Controlled Authorization Networks — UCAN — carry the same structural attenuation property. Both are leading candidates in active delegation governance work in our working group at DIF. Neither addresses mission lifecycle or subject agency state as runtime governance inputs. Macaroons and Biscuit provide structural attenuation — governing the logic of what a credential may do — but do not address intent continuity or semantic interpretation failures. Cedar, Open Policy Agent, and XACML provide policy evaluation infrastructure to mitigate the latter but no mechanism for making "missions" or intent more generally traceable or portable.
 
 Each addresses a real problem at its designed layer. None fully addresses the execution-time governance layer this paper defines. RAR carries purpose declarations at issuance but has no lifecycle revocation semantics. CAEP and SSF represent the most likely transport infrastructure for the runtime signals this paper defines — including subject agency state. The gap is not the transport mechanism but the standardized source of mission state and subject agency state those signals would carry. Token Exchange moves authority across boundaries but does not govern whether that authority should continue.
 
@@ -409,11 +413,11 @@ A failure at the authentication layer propagates directly to the governance laye
 
 An action at the end of a delegation chain must be traceable to (and evaluable against) the human grant that originated it. Standards must define provenance requirements for delegation chains analogous to software supply chain security — each hop attests to what it received and what it passed forward.
 
-ZCAPs and UCAN are the leading candidates for attenuated chained delegation. Both enforce the requirement that authority can only narrow at each hop, never expand. Both protect delegation-chain metadata through signatures that expose the chain to authorized parties and prevent tampering — a structural advantage over OAuth Token Exchange, where chain metadata is accessible only to the Authorization Server and is not protected from tampering. Neither addresses whether the subject behind the chain can still stand behind it at execution time.
+ZCAPs and UCAN are the leading candidates for attenuated chained delegation. Both enforce the requirement that capabilities — and the permissions they carry — can only narrow at each hop, never expand, constraining the authority a delegate can exercise as a result. Attenuation governs the delegation chain. It does not govern whether new grants should be issued as subject state changes. State-driven changes to delegated capability occur outside the existing delegation chain — either as a restriction at the execution gate or as a new grant by an authorized party that begins a new delegation chain. The original chain is never modified. Both protect delegation-chain metadata through signatures that expose the chain to authorized parties and prevent tampering — a structural advantage over OAuth Token Exchange, where chain metadata is accessible only to the Authorization Server and is not protected from tampering. Neither addresses whether the subject behind the chain can still stand behind it at execution time.
 
 KERI provides a cryptographic foundation for key event provenance where that depth is warranted — specifically in high-assurance government credential deployments such as SEDI and the mDL ecosystem under ISO 18013-5, where long-lived keys cross jurisdictional trust boundaries. For most delegation governance use cases the complexity KERI introduces is not justified. The KERI suite, developing within the Trust over IP Foundation, addresses verifiable provenance at the cryptographic layer for those contexts. Verifiable Credentials under the W3C data model provide a substrate for delegation attestations. SCITT complements this stack with an auditable transparency log layer.
 
-The Delegatable Authorization Task Force of the Trusted AI Agents Working Group at DIF and the Trust over IP Foundation's “dossier” work — bundled ACDC credentials for high-stakes execution environments — are the active community efforts on these requirements.
+The Delegatable Authorization Task Force of the Trusted AI Agents Working Group at DIF and the Trust over IP Foundation's "dossier" work — bundled ACDC credentials for high-stakes execution environments — are the active community efforts on these requirements.
 
 OAuth Token Exchange — RFC 8693 — is the current standard mechanism for passing delegated authority across service boundaries. It records who is acting on whose behalf through the act claim. It does not govern whether the chain should continue or whether each hop remains within the original grant's intent. AAuth-style mission objects — as specified in draft-hardt-aauth-protocol — begin to address this gap by carrying mission context across hops. The governance semantics required to evaluate whether each hop remains valid against that context remain an open specification problem.
 
@@ -427,11 +431,11 @@ This remains an open standards gap with no settled cross-framework specification
 
 ### Proof of continuity as an open standards gap
 
-Authority should be a provable property of the execution chain — where each hop proves that authority can continue and where a delegate cannot pass more authority than they hold. A delegate may combine what was passed to them with other permissions they independently hold — Alice invokes Bob with foo, Bob invokes Carol with foo and bar is a legitimate and common pattern. What cannot occur is a delegate passing authority they do not hold. ACDC addresses chained attestation in ways directly relevant to this requirement. The capability theory precedent from object capability systems and the Usage Control model provides theoretical grounding. What remains open is not whether proof of continuity is cryptographically tractable — the substrate exists. What remains open is specifying it as a mandatory interoperable governance requirement across trust domains, with verification semantics that hold regardless of which substrate each party uses.
+Authority should be a provable property of the execution chain — where each hop proves that authority can continue and where a delegate cannot pass more permission than they hold. A delegate may combine what was passed to them with other permissions they independently hold — Alice invokes Bob with foo, Bob invokes Carol with foo and bar is a legitimate and common pattern. What cannot occur is a delegate passing permission they do not hold. ACDC addresses chained attestation in ways directly relevant to this requirement. The capability theory precedent from object capability systems and the Usage Control model provides theoretical grounding. What remains open is not whether proof of continuity is cryptographically tractable — the substrate exists. What remains open is specifying it as a mandatory interoperable governance requirement across trust domains, with verification semantics that hold regardless of which substrate each party uses.
 
 ### The attestation binding problem
 
-The gap between authorization and execution records requires a standard binding mechanism that cryptographically connects the authorization permitting an action to the record documenting it. ZCAPs and UCANs address this directly — signing the request and delegation together with the private key corresponding to the public key in the delegation. DIF supports both as leading candidates for attenuated chained delegation. KERI and ACDC provide deeper provenance machinery where higher assurance or jurisdictional complexity warrants it. The governance semantics above that substrate, however, remain unspecified — whether binding is required, what obligations attach when it is absent, and how verification semantics translate across organizational boundaries where the two parties share no common infrastructure. That specification — binding as obligation, not option — is what remains open. 
+The gap between authorization and execution records requires a standard binding mechanism that cryptographically connects the authorization permitting an action to the record documenting it. ZCAPs and UCANs address this directly — signing the request and delegation together with the private key corresponding to the public key in the delegation. DIF supports both as leading candidates for attenuated chained delegation. KERI and ACDC provide deeper provenance machinery where higher assurance or jurisdictional complexity warrants it. The governance semantics above that substrate, however, remain unspecified — whether binding is required, what obligations attach when it is absent, and how verification semantics translate across organizational boundaries where the two parties share no common infrastructure. That specification — binding as obligation, not option — is what remains open.
 
 OAuth, GNAP, UCAN, ZCAPs, KERI, ACDC, Zero Trust, and fine-grained authorization remain foundational. What is missing is the layer above them that holds mission authority, subject agency state, and intent continuity as first-class independently governable artifacts. Specifying that layer is the standards work this paper asks for.
 
@@ -465,6 +469,10 @@ This glossary defines key terms used throughout the paper and maps interpretive 
 
 ### Core terms
 
+**Permission** — What a delegate is authorized to invoke. Determines what actions an agent or program may perform on the objects it can directly access. Permission is delegated explicitly and can only narrow at each hop in a delegation chain — a sub-delegate cannot hold more permission than the granting delegate.
+
+**Authority** — The effects a delegate can cause, including both what is permitted directly and what can be caused indirectly through permitted interactions with other programs or systems. Authority depends on the behavior of what is invoked and may therefore be broader than the permission that enabled it. A delegate controls their permissions; they do not fully control their authority, because authority is partly determined by the behavior of the things they invoke. Authority narrows within a delegation chain as a consequence of permission attenuation — but permissions may legitimately increase through new grants, as when a subject's support needs grow and access to additional domains is explicitly authorized.
+
 **Execution-time authority** — The valid state of delegated authority at the precise moment an action is taken on behalf of a delegate, as distinct from authority that was valid at issuance or session establishment.
 
 **Governance TOCTOU** — A class of vulnerability in which the authority checked at issuance is not the authority present at execution. Derived from the software security concept of Time-of-Check to Time-of-Use (TOCTOU) and applied to delegation governance.
@@ -489,9 +497,9 @@ This glossary defines key terms used throughout the paper and maps interpretive 
 
 **Ghost execution** — The enforcement failure where valid credentials continue to authorize actions after the purpose that justified them has ended. The token is valid. The policy check passes. The mission is over. No enforcement point knows the difference.
 
-**Attenuation** — The governance requirement that each hop in a delegation chain can narrow scope. A sub-delegate should never hold more authority than the delegate. A delegate should never hold more than the subject granted. A delegate may combine delegated authority with permissions they independently hold — but cannot pass authority they do not hold. Without enforced attenuation every delegation hop is a potential amplification point.
+**Attenuation** — The governance requirement that each hop in a delegation chain can only narrow the permissions granted. A sub-delegate should never hold more permission than the granting delegate. A delegate should never hold more permission than the subject granted. Authority — the effects that can be caused — narrows as a consequence of permission attenuation, but may still exceed what the delegating party anticipated if the behavior of invoked systems changes. A delegate may combine delegated permission with permissions they independently hold — but cannot pass permission they do not hold. Without enforced attenuation every delegation hop is a potential amplification point.
 
-**Proof of continuity** — The cryptographic property of a delegation chain in which each hop demonstrates that authority can continue and that a delegate has not passed more authority than they hold. A delegate may combine delegated authority with permissions they independently hold — but cannot pass authority they do not hold.
+**Proof of continuity** — The cryptographic property of a delegation chain in which each hop demonstrates that permission can continue and that a delegate has not passed more permission than they hold. A delegate may combine delegated permission with permissions they independently hold — but cannot pass permission they do not hold. Authority — the downstream effects — is constrained as a consequence.
 
 **Fiduciary transition** — The governance event in which authority transfers from an advisory delegate to a designated fiduciary when subject agency state degrades to Unresponsive. The transition is triggered by subject agency state evaluation against pre-expressed intent, not by a human decision in the moment.
 
@@ -509,56 +517,58 @@ This glossary defines key terms used throughout the paper and maps interpretive 
 
 The following labels were used during development of this paper to describe compounding failure patterns. They are retained here for reference. Governance-neutral equivalents are used in the main text.
 
-| Interpretive label | Governance-neutral equivalent | Description |
-| ----- | ----- | ----- |
-| Ghost in the machine | Unbounded and unattested authority | Authority that expands without a footprint. No way to trace where scope was exceeded. |
-| Zombies | Stale authority continuation | Authority that outlives its justification. Permissions that should have been revoked but were not. |
-| Puppet master | Semantic manipulation of enforcement path | Governance bypassed via prompt injection because the system evaluates who is acting but not what was directed. |
-| Ghost execution | Ghost execution | The agent continues acting with valid credentials for a mission that already ended. Retained as a primary term because it is precise and increasingly recognized in the community. |
+| Interpretive label   | Governance-neutral equivalent             | Description                                                                                                                                                                        |
+| -------------------- | ----------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Ghost in the machine | Unbounded and unattested authority        | Authority that expands without a footprint. No way to trace where scope was exceeded.                                                                                              |
+| Zombies              | Stale authority continuation              | Authority that outlives its justification. Permissions that should have been revoked but were not.                                                                                 |
+| Puppet master        | Semantic manipulation of enforcement path | Governance bypassed via prompt injection because the system evaluates who is acting but not what was directed.                                                                     |
+| Ghost execution      | Ghost execution                           | The agent continues acting with valid credentials for a mission that already ended. Retained as a primary term because it is precise and increasingly recognized in the community. |
+
 
 ## Appendix B: NCCoE and NIST Cyber AI Profile Crosswalk
 
 The NCCoE concept paper organizes its questions around four areas: identification, authorization, auditing and non-repudiation, and controls to prevent and mitigate prompt injection.
 
-| NCCoE focus area | Relevant failure categories | Gap this paper identifies |
-| ----- | ----- | ----- |
-| Identification — distinguishing AI agents from human users | Category 4: Authority not properly authenticated | Identity is necessary but not sufficient. Current identification frameworks establish which entity is acting, but not whether the delegated authority behind that action remains valid under current operational conditions. |
-| Authorization — applying standards to define and enforce agent rights | Category 1: Not properly bounded. Category 3: Not properly enforced | Authorization frameworks govern issuance and enforcement of permissions. They do not specify what must be evaluated at the moment of execution. Execution-time authority continuity is not currently governed. |
-| Access delegation — linking user identities to agents | Category 1: Not properly bounded. Category 2: Not properly attested | Delegation frameworks carry credentials but not operational mission continuity. Delegation chain traceability is not currently standardized, and runtime governance state is not typically carried as a delegation input. |
-| Auditing and non-repudiation | Category 2: Not properly attested | There is currently no standard cryptographic binding between authorization records and execution records. Intent continuity does not yet have a broadly adopted attestable form. |
-| Prompt injection prevention | Category 4: Not properly authenticated. Category 5: Not properly interpreted | Prompt injection is typically addressed as a security control problem. This paper identifies a broader governance failure at the semantic layer, where instructions may be technically valid, correctly authorized, and correctly executed, yet still violate the operational intent of the originating principal. |
+| NCCoE focus area                                                      | Relevant failure categories                                                  | Gap this paper identifies                                                                                                                                                                                                                                                                                          |
+| --------------------------------------------------------------------- | ---------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Identification — distinguishing AI agents from human users            | Category 4: Authority not properly authenticated                             | Identity is necessary but not sufficient. Current identification frameworks establish which entity is acting, but not whether the delegated authority behind that action remains valid under current operational conditions.                                                                                       |
+| Authorization — applying standards to define and enforce agent rights | Category 1: Not properly bounded. Category 3: Not properly enforced          | Authorization frameworks govern issuance and enforcement of permissions. They do not specify what must be evaluated at the moment of execution. Execution-time authority continuity is not currently governed.                                                                                                     |
+| Access delegation — linking user identities to agents                 | Category 1: Not properly bounded. Category 2: Not properly attested          | Delegation frameworks carry credentials but not operational mission continuity. Delegation chain traceability is not currently standardized, and runtime governance state is not typically carried as a delegation input.                                                                                          |
+| Auditing and non-repudiation                                          | Category 2: Not properly attested                                            | There is currently no standard cryptographic binding between authorization records and execution records. Intent continuity does not yet have a broadly adopted attestable form.                                                                                                                                   |
+| Prompt injection prevention                                           | Category 4: Not properly authenticated. Category 5: Not properly interpreted | Prompt injection is typically addressed as a security control problem. This paper identifies a broader governance failure at the semantic layer, where instructions may be technically valid, correctly authorized, and correctly executed, yet still violate the operational intent of the originating principal. |
+
 
 **Mapping to NIST Cyber AI Profile — CSF 2.0 functions**
 
 The Spring 2026 COI working sessions identified agentic AI considerations for integration across CSF 2.0 functions. This paper's failure categories map directly to those functions as follows.
 
-| CSF 2.0 function | Agentic AI considerations identified by NIST | Failure categories this paper maps here | Gap this paper adds |
-| ----- | ----- | ----- | ----- |
-| Govern (GV) | Permitted levels of autonomy, human oversight, escalation paths, access governance and periodic review | Category 1: Bounded. Category 3: Enforced | NIST identifies governance requirements but does not yet define mechanisms for incorporating runtime governance state into authorization continuity decisions. Authority must adapt to current subject conditions, not only to predefined policy. |
-| Identify (ID) | Agent identity architecture, tool and connector inventory, trust boundary definition | Category 2: Attested. Category 4: Authenticated | Identity without provenance and continuity of delegated authority is insufficient for accountability. Current identification frameworks establish which entity is acting, but not whether the delegated authority behind that action remains valid under current conditions. Delegation chain traceability is not currently specified. |
-| Protect (PR) | Credential lifecycle, least privilege, prompt injection defenses, output validation | Category 1: Bounded. Category 4: Authenticated. Category 5: Interpreted | Current protect controls govern credential management and input sanitization. They do not govern whether the mission behind the credential remains valid or whether the subject can still stand behind it. |
-| Detect (DE) | Logging, immutable audit trails, behavioral observability, anomaly detection | Category 2: Attested. Category 3: Enforced | Detection frameworks monitor behavior against baselines. They do not detect when authority has lapsed while credentials remain valid — the ghost execution failure mode. |
-| Respond (RS) | Incident response playbooks, identity containment, escalation | Category 3: Enforced | Escalation paths are identified as a requirement. This paper specifies the governance architecture that makes escalation automatic rather than manual — triggered by subject agency state evaluation, not human decision. |
-| Recover (RC) | Fail-safe behavior, recovery planning, validation after recovery | Category 3: Enforced | Fail-closed behavior is identified as a default. This paper provides the governance basis for that requirement — in the absence of a positive determination of current authority, the appropriate default is to deny, not to continue. |
+| CSF 2.0 function | Agentic AI considerations identified by NIST                                                           | Failure categories this paper maps here                                 | Gap this paper adds                                                                                                                                                                                                                                                                                                                    |
+| ---------------- | ------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Govern (GV)      | Permitted levels of autonomy, human oversight, escalation paths, access governance and periodic review | Category 1: Bounded. Category 3: Enforced                               | NIST identifies governance requirements but does not yet define mechanisms for incorporating runtime governance state into authorization continuity decisions. Authority must adapt to current subject conditions, not only to predefined policy.                                                                                      |
+| Identify (ID)    | Agent identity architecture, tool and connector inventory, trust boundary definition                   | Category 2: Attested. Category 4: Authenticated                         | Identity without provenance and continuity of delegated authority is insufficient for accountability. Current identification frameworks establish which entity is acting, but not whether the delegated authority behind that action remains valid under current conditions. Delegation chain traceability is not currently specified. |
+| Protect (PR)     | Credential lifecycle, least privilege, prompt injection defenses, output validation                    | Category 1: Bounded. Category 4: Authenticated. Category 5: Interpreted | Current protect controls govern credential management and input sanitization. They do not govern whether the mission behind the credential remains valid or whether the subject can still stand behind it.                                                                                                                             |
+| Detect (DE)      | Logging, immutable audit trails, behavioral observability, anomaly detection                           | Category 2: Attested. Category 3: Enforced                              | Detection frameworks monitor behavior against baselines. They do not detect when authority has lapsed while credentials remain valid — the ghost execution failure mode.                                                                                                                                                               |
+| Respond (RS)     | Incident response playbooks, identity containment, escalation                                          | Category 3: Enforced                                                    | Escalation paths are identified as a requirement. This paper specifies the governance architecture that makes escalation automatic rather than manual — triggered by subject agency state evaluation, not human decision.                                                                                                              |
+| Recover (RC)     | Fail-safe behavior, recovery planning, validation after recovery                                       | Category 3: Enforced                                                    | Fail-closed behavior is identified as a default. This paper provides the governance basis for that requirement — in the absence of a positive determination of current authority, the appropriate default is to deny, not to continue.                                                                                                 |
 
-## **What NIST has not yet addressed** {#what-nist-has-not-yet-addressed}
 
-Three areas in this paper have no current equivalent in NIST’s active framing.
+## **What NIST has not yet addressed**
+
+Three areas in this paper have no current equivalent in NIST's active framing.
 
 First: runtime governance state as a delegation continuity variable. NIST addresses agent identity and access control. It does not address whether the human subject behind a delegation can still authorize, redirect, or revoke delegated authority at the moment of execution. This paper identifies runtime governance continuity as a distinct operational requirement.
 
 Second: mission lifecycle as distinct from credential lifecycle. NIST addresses credential management and access control. It does not specify when a delegated mission should terminate independently of credential validity. This is the credential lifecycle versus mission lifecycle distinction described in Section 10.2.
 
-Third: semantic interpretation failure as a governance category. NIST addresses prompt injection primarily as a security control problem. This paper identifies a broader governance category — authority not properly interpreted — in which an instruction may be technically valid, correctly authorized, and correctly executed, yet still violate the operational constraints of the originating principal. That failure mode is not currently addressed in NIST’s agentic AI framing.
+Third: semantic interpretation failure as a governance category. NIST addresses prompt injection primarily as a security control problem. This paper identifies a broader governance category — authority not properly interpreted — in which an instruction may be technically valid, correctly authorized, and correctly executed, yet still violate the operational constraints of the originating principal. That failure mode is not currently addressed in NIST's agentic AI framing.
 
 Fourth: responsibility continuity across delegated execution chains. Current agentic AI framing often treats the agent as the operationally accountable actor. This paper argues that accountability ultimately traces to the originating subject and the governance framework that authorized the delegation. Execution without traceable continuity of delegated responsibility creates accountability gaps that identity and authorization mechanisms alone do not resolve.
 
 These gaps represent actionable areas for continued engagement as NCCoE and NIST agentic AI guidance evolves from concept papers toward operational architectures and implementation guidance.
 
-
 ## Appendix C: Delegation Lifecycle and Execution Gap — Diagram Reference
 
-This appendix describes the delegation lifecycle diagram concept referenced in Section 10\. The diagram has not yet been rendered as a final figure. The description below provides the specification for that diagram.
+This appendix describes the delegation lifecycle diagram concept referenced in Section 10. The diagram has not yet been rendered as a final figure. The description below provides the specification for that diagram.
 
 The diagram shows four stages across a horizontal timeline.
 
@@ -576,18 +586,18 @@ The execution-time delegation harness presented at IIW April 2026 demonstrates t
 
 The execution gate architecture operates across three layers. The human source expresses intent through subject agency state. The delegation chain carries chained attestation through UCAN, ZCAP, and ACDC. At the execution gate, the intent gateway evaluates three inputs in real time: current subject agency state as a liveness signal, proof of continuity as cryptographic cargo, and decoupled mission state to determine whether the mission remains valid or has expired. The action point produces verifiable execution bound to the originating grant. This is the architectural construct the governance requirements in this paper would produce.
 
-
 ## Appendix D: Subject Agency State — Quick Reference for Implementers
 
 This table summarizes the five subject agency states defined in Section 9, their observable indicators, the governance implications for each state, and the authority path the system should activate.
 
-| Subject agency state | Observable indicators | System response | Authority path |
-| ----- | ----- | ----- | ----- |
-| Normal | Present, coherent, reachable. Engagement consistent with expected pattern. | Operate under current expressed intent. Accept new authorizations and redirections. | Advisory — full subject participation. |
-| Temporarily unavailable | Expected, bounded interruption. Asleep, traveling, briefly unreachable. Interruption is known and time-bounded. | Preserve prior intent without escalation. Advisory interactions continue within pre-authorized bounds. Await resumption. | Advisory — prior intent governs. |
-| Impaired | Present but deviation from expected engagement pattern detected. Reduced responsiveness. Possible temporary or developing condition. | Restrict to pre-authorized actions for this state. Hold new intent expressions pending restoration. Monitor for recovery or degradation. | Advisory — limited. New instructions not accepted as authoritative. |
-| Unresponsive | Not reachable, not responsive. Sustained break in engagement. Cause unknown or medical. | Suspend advisory access. Trigger fiduciary transition. Document transition as governance event with full audit trail. | Fiduciary — pre-expressed intent governs through designated authority. |
-| Permanently incapacitated | Qualified determination of permanent incapacity. Formal assessment by designated evaluator. | Activate full legal instrument. Operate under designated authority with subject's pre-expressed wishes as governing instruction. Document all actions against original grant. | Fiduciary — full. Durable Power of Attorney or equivalent instrument active. |
+| Subject agency state      | Observable indicators                                                                                                                | System response                                                                                                                                                               | Authority path                                                               |
+| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| Normal                    | Present, coherent, reachable. Engagement consistent with expected pattern.                                                           | Operate under current expressed intent. Accept new authorizations and redirections.                                                                                           | Advisory — full subject participation.                                       |
+| Temporarily unavailable   | Expected, bounded interruption. Asleep, traveling, briefly unreachable. Interruption is known and time-bounded.                      | Preserve prior intent without escalation. Advisory interactions continue within pre-authorized bounds. Await resumption.                                                      | Advisory — prior intent governs.                                             |
+| Impaired                  | Present but deviation from expected engagement pattern detected. Reduced responsiveness. Possible temporary or developing condition. | Restrict to pre-authorized actions for this state. Hold new intent expressions pending restoration. Monitor for recovery or degradation.                                      | Advisory — limited. New instructions not accepted as authoritative.          |
+| Unresponsive              | Not reachable, not responsive. Sustained break in engagement. Cause unknown or medical.                                              | Suspend advisory access. Trigger fiduciary transition. Document transition as governance event with full audit trail.                                                         | Fiduciary — pre-expressed intent governs through designated authority.       |
+| Permanently incapacitated | Qualified determination of permanent incapacity. Formal assessment by designated evaluator.                                          | Activate full legal instrument. Operate under designated authority with subject's pre-expressed wishes as governing instruction. Document all actions against original grant. | Fiduciary — full. Durable Power of Attorney or equivalent instrument active. |
+
 
 ## Implementation notes
 
@@ -604,30 +614,28 @@ No current authorization framework specifies how subject agency state is derived
 The Decentralized Identity Foundation has adopted the W3C Patent Policy (2004), as detailed below:
 
 - Licensing Commitment. Each contributor agrees to make available any of its
-  Essential Claims, as defined in the W3C Patent Policy (available at
-  http://www.w3.org/Consortium/Patent-Policy-20040205), under the W3C RF licensing
-  requirements Section 5 (http://www.w3.org/Consortium/Patent-Policy-20040205), as
-  if the contribution was contained in or associated with a W3C Recommendation.
+Essential Claims, as defined in the W3C Patent Policy (available at <http://www.w3.org/Consortium/Patent-Policy-20040205>), under the W3C RF licensing
+requirements Section 5 (<http://www.w3.org/Consortium/Patent-Policy-20040205>), as
+if the contribution was contained in or associated with a W3C Recommendation.
 
 - For Exclusion. Prior to committing any code, bug reports, pull requests, or
-  other forms of contribution, a contributor may exclude Essential Claims from its
-  licensing commitments under this agreement by providing written notice of that
-  intent to DIF's Executive Director (and must received confirmation of receipt
-  for the exclusion to have effect).
+other forms of contribution, a contributor may exclude Essential Claims from its
+licensing commitments under this agreement by providing written notice of that
+intent to DIF's Executive Director (and must received confirmation of receipt
+for the exclusion to have effect).
 The Exclusion Notice for issued patents and
-  published applications must include the patent number(s) or title and
-  application number(s), as the case may be, for each of the issued patent(s) or
-  pending patent application(s) that the contributor wishes to exclude from the
-  licensing commitment set forth in Section 1 of this patent policy.
+published applications must include the patent number(s) or title and
+application number(s), as the case may be, for each of the issued patent(s) or
+pending patent application(s) that the contributor wishes to exclude from the
+licensing commitment set forth in Section 1 of this patent policy.
 If an issued
-  patent or pending patent application that may contain Essential Claims is not
-  set forth in the Exclusion Notice, those Essential Claims shall continue to be
-  subject to the licensing commitments under this agreement.
+patent or pending patent application that may contain Essential Claims is not
+set forth in the Exclusion Notice, those Essential Claims shall continue to be
+subject to the licensing commitments under this agreement.
 The Exclusion Notice
-  for unpublished patent applications must provide either: (i) the text of the
-  filed application; or (ii) identification of the specific part(s) of the
-  contribution whose implementation makes the excluded claim an Essential Claim.
-  If (ii) is chosen, the effect of the exclusion will be limited to the identified
-  part(s) of the contribution.
-DIF's Executive Director will publish Exclusion
-  Notices.
+for unpublished patent applications must provide either: (i) the text of the
+filed application; or (ii) identification of the specific part(s) of the
+contribution whose implementation makes the excluded claim an Essential Claim.
+If (ii) is chosen, the effect of the exclusion will be limited to the identified
+part(s) of the contribution.
+DIF's Executive Director will publish Exclusion Notices.
