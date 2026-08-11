@@ -114,7 +114,7 @@ A delegate holding multiple delegations may combine them to exceed what any sing
 
 Boundary requirement: bounds must persist across time, delegation chains, and execution contexts. A bound that exists at issuance but is not enforced at execution is not a bound. It is a statement of intent.
 
-Time amplifier: bounds defined at issuance may reflect the subject's intent even less at execution than at intention, when they might reasonably have been inferred with enough context.
+Time amplifier: bounds defined at issuance reflect the subject's intent less and less as execution recedes from the moment of intending — the moment when that intent could still have been inferred from context.
 
 ## Failure Mode Category Two: Authority Not Properly Attested
 
@@ -124,7 +124,7 @@ Attestation is the governance requirement that authorization and execution leave
 
 Authorization and execution records tend to exist in separate namespaces with no cryptographic binding between them, merged only by a joint owner of the two namespaces and never presented to any external party as an intelligible recordset, much less a meaningful audit log. Post-incident review cannot establish that an action was taken under the authority of a specific grant, by the specific delegate it was issued to, at a moment when the grant was still valid. The absence of that binding is not a logging gap. It is a structural accountability failure. 
 
-In one documented deployment, a certificate capability system signed the authorization and the execution request as separate artifacts. An adversary exploited the separation to attach a different request to a valid set of permissions. The fix in that case was a single signature covering both documents— binding what was authorized to what was executed, and ensuring anyone authorized to see or verify one document had the other on hand.
+A certificate capability system can sign the authorization and the execution request as separate artifacts. An adversary can exploit that separation to attach a different request to a valid set of permissions. The mitigation is a single signature covering both documents — binding what was authorized to what was executed, and ensuring anyone authorized to see or verify one document has the other on hand.
 
 ### Delegation chain cannot be reconstructed after the fact
 
@@ -283,9 +283,9 @@ When the subject agency state is compromised and the delegation chain carries no
 
 ### A documented example
 
-An autonomous agent and a human co-authored a formal IETF draft targeting the gap these documents name, submitted through an open GitHub pathway without working group authorization, surfacing through automated Slack notification rather than governance review. The submission entered the standards process through the failure mode it proposes to solve. The authorization record showed a valid contributor. The governance record showed an unauthorized submission. The two records existed in separate namespaces with no binding between them. No enforcement point evaluated whether the action was consistent with the intent of the working group that would be asked to govern it. The process by which it was submitted surfaced the absence of execution-time governance over the agent that submitted it.
+An autonomous agent and a human co-authored a formal IETF draft targeting the gap these documents name — [Execution Outcome Attestation for AI Agents and Automated Systems](https://datatracker.ietf.org/doc/draft-morrow-sogomonian-exec-outcome-attest/), an individual Internet-Draft. Submitting it required no authorization; anyone may submit an Internet-Draft. The governance failure was elsewhere. The agent sent a message to a working group's mailing list, identifying itself as an autonomous AI agent. That message surfaced the same day in the group's closed Slack channel, through an automated notification that named the agent as its source — a channel the agent had never been admitted to. Identity was not what failed. The notification carried the originator's identity accurately across the boundary, and the originator had disclosed what it was. What was absent was any evaluation of whether that originator belonged on the other side. The integration could deliver notifications into the channel; the agent had not been admitted as a participant. Nothing in the observed path demonstrated a binding between those two facts, and nothing in it evaluated whether the content belonged in the channel it reached. Knowing exactly who was acting produced no governance decision, which is the gap this paper names.
 
-Note: Internal labels used during development of this paper — Ghost in the Machine, Zombies, Puppet Master — are retained in the glossary. Section headings use governance-neutral language.
+Note: the glossary retains informal labels for several of these failure modes — Ghost in the Machine, Zombies, Puppet Master — which section headings describe in governance-neutral language.
 
 ## The Human Condition Layer 
 
@@ -345,7 +345,7 @@ At Permanently incapacitated, attestation is the critical ongoing requirement. W
 
 ### This is not an edge case
 
-More than 55 million people in the United States are over 65\. Globally that number exceeds 700 million. Cognitive decline, medical events, and temporary incapacity affect people across every age group and every context in which agent systems are deployed. Any agent system deployed on behalf of human subjects will eventually encounter a subject whose agency state has changed.
+In 2024, 61.2 million people in the United States were age 65 or older, according to the [U.S. Census Bureau](https://www.census.gov/newsroom/press-releases/2025/older-adults-outnumber-children.html). Globally that number exceeds 700 million. Cognitive decline, medical events, and temporary incapacity affect people across every age group and every context in which agent systems are deployed. Any agent system deployed on behalf of human subjects will eventually encounter a subject whose agency state has changed.
 
 The developmental direction matters equally. A parent who authorizes an agent to support a child's care will eventually reach a point where the child should hold that authority themselves. Subject agency state transitions occur in both directions. The governance architecture must address both.
 
@@ -379,7 +379,7 @@ The failure modes cataloged in this paper are structural gaps in what current st
 
 The central requirement is stated in Axiom 3: evaluation must occur at execution, not issuance. That requirement is not fully specified by any widely adopted authorization standard today. OAuth, GNAP, and related frameworks provide critical authorization machinery. They do not by themselves define how subject agency state, intent continuity, and delegated authority are evaluated at execution time. That is not a criticism. It is a precise statement of where their design boundary falls.
 
-The standards work this paper calls for is additive, not replacement. Working implementations have demonstrated that the subject agency state signal is derivable from observable behavioral inputs in real time. That work is referenced in the appendix.
+The standards work this paper calls for is additive, not replacement. A working implementation has demonstrated derivation of a subject agency state signal from observable behavioral inputs and its evaluation at the point of action. That implementation and the earlier demonstration from which it evolved are described in the appendix, and both are publicly available for technical review.
 
 ### Standards must define how authority is evaluated at execution, not just how it is granted
 
@@ -572,7 +572,7 @@ Stage four — Outcome. The action produces effects. If the execution point was 
 
 The gap this paper addresses is between Stage one and Stage three. Governance currently stops at issuance. It must extend to execution.
 
-The execution-time delegation harness presented at IIW April 2026 demonstrates this lifecycle visually across six phases. The nine figures from that demonstration are available on request and serve as the working implementation reference for this diagram.
+The IntentGate execution-time governance demonstration, presented at IIW 42 in April 2026, shows this lifecycle across six phases and is [publicly available](https://www.youtube.com/watch?v=u-uWl_s0PPM). That work matured into SOGA, whose [reference implementation](https://github.com/DebBLabs/soga) and execution-time policy evaluation matrices are publicly available for technical review.
 
 The execution gate architecture operates across three layers. The human source expresses intent through subject agency state. The delegation chain carries chained attestation through UCAN, ZCAP, and ACDC. At the execution gate, the intent gateway evaluates three inputs in real time: current subject agency state as a liveness signal, proof of continuity as cryptographic cargo, and decoupled mission state to determine whether the mission remains valid or has expired. The action point produces verifiable execution bound to the originating grant. This is the architectural construct the governance requirements in this paper would produce.
 
